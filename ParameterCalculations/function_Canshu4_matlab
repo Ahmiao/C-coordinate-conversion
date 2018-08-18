@@ -1,0 +1,38 @@
+function [dx,dy,rota,scale]=sicanshu(point1,point2)
+%point1(i,1)repsent the x of the i point point1(i,2)repsent the y of the i
+%point
+%point2 is the same
+pointnumber=length(point1);
+u=1;v=0;Dx=0;Dy=0;
+B1=ones(2*pointnumber,4);
+W1=ones(2*pointnumber,1);
+for i=0:1:pointnumber-1
+    B1(2*i+1,1)=1;
+    B1(2*i+1,2)=0;
+    B1(2*i+1,3)=point1(i+1,1);
+    B1(2*i+1,4)=-point1(i+1,2);
+    B1(2*i+2,1)=0;
+    B1(2*i+2,2)=1;
+    B1(2*i+2,3)=point1(i+1,2);
+    B1(2*i+2,4)=point1(i+1,1);
+    W1(2*i+1,1)=point2(i+1,1)-u*point1(i+1,1)+v*point1(i+1,2)-Dx;
+    W1(2*i+2,1)=point2(i+1,2)-u*point1(i+1,2)+v*point1(i+1,1)-Dy;
+end
+BT=B1';
+N=BT*B1;
+InvN=inv(N);
+BTW=BT*W1;
+dx1=InvN*BTW;
+Dx=Dx+dx1(1,1);
+Dy=Dy+dx1(2,1);
+u =u +dx1(3,1);
+v= v +dx1(4,1);
+dx=Dx;
+dy=Dy;
+rota=atan(v/u);
+scale=u/cos(rota);
+dx=round(dx,6);
+dy=round(dy,6);
+rota=round(rota,6);
+scale=round(scale,6);
+end
